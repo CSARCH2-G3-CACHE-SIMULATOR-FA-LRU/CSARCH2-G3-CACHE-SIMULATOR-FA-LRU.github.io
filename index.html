@@ -1,0 +1,378 @@
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="description" content="Cache Simulator (Full Associative / LRU)">
+  <meta name="keywords" content="cache">
+  <meta name="author" content="CSARCH2-G3">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cache Simulator (Full Associative / LRU)</title>
+
+  <!-- Bootstrap -->
+  <link rel="shortcut icon" href="laptop.png">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+    rel="stylesheet">
+
+  <!--   Core JS Files   -->
+  <script src="https://kit.fontawesome.com/a2bb66671d.js" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+
+
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/a2bb66671d.js" crossorigin="anonymous"></script>
+
+  <!-- Script for simulation -->
+  <script src="simulateCache.js"></script>
+</head>
+
+<style>
+  h1 {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+  }
+
+  body {
+    font-family: 'Space Mono', monospace;
+    opacity: 0;
+    transition: opacity 1s;
+    -webkit-transition: opacity 1;
+  }
+
+  #cacheSim {
+    width: 80% !important;
+    margin-left: 25%;
+  }
+
+  .inputrow {
+    background-color: rgb(51, 52, 56);
+    color: white;
+    padding: 10px;
+    margin: 10px;
+  }
+</style>
+
+<body onload="document.body.style.opacity='1'">
+  <div class="container px-4 pb-2">
+    <div class="row pt-4 pb-3">
+      <div class="col">
+        <h1 class="text-success">Cache Simulator (Full Associative / LRU)</h1>
+        <p class="text-info">CSARCH2 S11 Group 3</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <div class="card border-info mb-3 shadow-sm input-card" style="max-width: 100%; ">
+          <div class="card-header text-info"><b>Input</b></div>
+          <div class="card-body text-info">
+            <form class="needs-validation" novalidate>
+
+              <div class="form-group">
+                <label for="input_blocksize">Block Size</label>
+                <input type="number" min="1" class="form-control " id="input_blocksize" placeholder="Enter block size"
+                  required>
+                <div class="valid-feedback">
+                  Looks good!
+                </div>
+                <div class="invalid-feedback">
+                  Please enter a valid block size.
+                </div>
+              </div>
+
+              <br>
+
+              <div class="form-group" id="viewformSize">
+                <p>View memory size as</p>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" value="block" name="radioUnit" id="inputradio1" checked>
+                  <label class="form-check-label text-muted" for="inputradio1">
+                    Block
+                  </label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" value="word" name="radioUnit" id="inputradio2">
+                  <label class="form-check-label text-muted" for="inputradio2">
+                    Word
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="input_mmsize">Main Memory Size</label>
+                <input type="number" min="1" class="form-control" id="input_mmsize" placeholder="Enter main memory size"
+                  required>
+                <div class="valid-feedback">
+                  Looks good!
+                </div>
+                <div class="invalid-feedback">
+                  Please enter a valid main memory size.
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="input_cmsize">Cache Memory Size</label>
+                <input type="number" min="1" class="form-control" id="input_cmsize"
+                  placeholder="Enter cache memory size" required>
+                <div class="valid-feedback">
+                  Looks good!
+                </div>
+                <div class="invalid-feedback">
+                  Please enter a valid cache memory size.
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="input_memaccesstime">Memory Access Time</label>
+                <input type="number" min="0" class="form-control" id="input_memaccesstime"
+                  placeholder="Enter the time taken to access main memory" required>
+                <small id="input_cmsize" class="form-text text-muted">Unit in nanoseconds.</small>
+                <div class="valid-feedback">
+                  Looks good!
+                </div>
+                <div class="invalid-feedback">
+                  Please enter a valid memory access time value.
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="input_cacheaccesstime">Cache Access Time</label>
+                <input type="number" min="0" class="form-control" id="input_cacheaccesstime"
+                  placeholder="Enter the time taken to access cache memory" required>
+                <small id="input_cmsize" class="form-text text-muted">Unit in nanoseconds.</small>
+                <div class="valid-feedback">
+                  Looks good!
+                </div>
+                <div class="invalid-feedback">
+                  Please enter a valid memory access time value.
+                </div>
+              </div>
+
+              <br>
+              <div class="form-group" id="viewform">
+                <p>View input as</p>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" value="block" name="flexRadioDefault"
+                    id="flexRadioDefault1" checked>
+                  <label class="form-check-label text-muted" for="flexRadioDefault1">
+                    Block
+                  </label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" value="address" name="flexRadioDefault"
+                    id="flexRadioDefault2">
+                  <label class="form-check-label text-muted" for="flexRadioDefault2">
+                    Address
+                  </label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="input_mainMemoryMap">Main Memory Values</label>
+                <input type="text" class="form-control" id="input_mainMemoryMap"
+                  placeholder="Enter a string of integers to add to memory" required>
+                <small id="input_mainMemoryMap" class="form-text text-muted">Value sequence separated with
+                  commas (e.g. '1,2,4,10'). Address should be in binary.</small>
+                <div class="valid-feedback">
+                  Looks good!
+                </div>
+                <div class="invalid-feedback">
+                  Enter a valid input.
+                </div>
+              </div>
+              <div class="form-group">
+                <input type="number" value="1" class="form-control" id="input_mainMemoryMult"
+                  placeholder="Enter the number of times to add the sequence" required>
+                <small id="input_mainMemoryMult" class="form-text text-muted">Number of times to add the
+                  sequence.</small>
+                <div class="valid-feedback">
+                  Looks good!
+                </div>
+                <div class="invalid-feedback">
+                  Multiplier should be a positive integer.
+                </div>
+              </div>
+              <div class="form-group text-center">
+                <button type="button" class="btn btn-success" id="addValues">Add Values</button>
+              </div>
+              <div class="form-group">
+                <table class="table teable-sm table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col">Index</th>
+                      <th scope="col">Value</th>
+                    </tr>
+
+                  <tbody id="sequenceBody">
+
+                  </tbody>
+                  </thead>
+                </table>
+              </div>
+              <div class="form-group text-center pt-3">
+                <button type="submit" class="btn btn-info" id="submitInputs">SUBMIT</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <div class="card border-warning mb-3 shadow-sm simulation-card" style="max-width: 100%;">
+          <div class="card-header text-warning "><b>Simulation</b></div>
+          <div class="card-body text-warning simulation-body" id="simulation-body" hidden>
+            <div class="row">
+              <div class="col-1"></div>
+              <div class="col-10">
+                <h1>Input</h1>
+                <div class="row inputrow" id="inputSimulation">
+
+                </div>
+              </div>
+            </div>
+            <div class="row">
+
+              <div class="col-1"></div>
+              <div class="col-10">
+                <h1>Cache Memory</h1>
+                <div class="row">
+                  <div class="col-6">
+                    <table class="table" id="cacheSim">
+                      <thead class="thead-dark">
+                        <tr>
+                          <th scope="col">Block Number</th>
+                          <th scope="col" class="text-right">Data</th>
+                        </tr>
+                      </thead>
+                      <tbody id="simulationTable">
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="col-4">
+                    <table class="table" id="cacheSim">
+                      <thead class="thead-dark">
+                        <tr>
+                          <th scope="col" class="text-center">Hit</th>
+                          <th scope="col" class="text-center">Miss</th>
+                        </tr>
+                      </thead>
+                      <tbody id="simulationTable">
+                        <th scope="row" id="hits" class="text-center">0</th>
+                        <th scope="row" id="misses" class="text-center">0</th>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="col-1"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <div class="card border-success mb-3 shadow-sm output-card" style="max-width: 100%;">
+          <div class="card-header text-success "><b>Output</b></div>
+          <div class="card-body text-success output-body" id="output-body">
+          </div>
+
+          <div class="output-button"></div>
+        </div>
+      </div>
+    </div>
+    <div class="row text-center p-4 poutput-button">
+      <div class="col">
+        <button type="button" class="btn btn-warning" id="gooutput"><i class="fas fa-arrow-right"></i> PROCEED TO
+          OUTPUT</button>
+      </div>
+    </div>
+
+    <div class="row text-center p-4 retry-button">
+      <div class="col">
+        <button type="button" class="btn btn-success" onclick="retry()"><i class="fas fa-undo-alt"></i> RETRY</button>
+      </div>
+    </div>
+</body>
+
+<script>
+  $(document).ready(function () {
+    $("body").fadeIn();
+    $(".output-card").hide();
+    $(".simulation-card").hide();
+    $(".retry-button").hide();
+    $(".poutput-button").hide();
+  });
+
+  // Form validator
+  (function () {
+    'use strict';
+    window.addEventListener('load', function () {
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.getElementsByClassName('needs-validation');
+      // Loop over them and prevent submission
+      var validation = Array.prototype.filter.call(forms, function (form) {
+        form.addEventListener('submit', function (event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          } else {
+            event.preventDefault();
+          }
+        }, false);
+      });
+    }, false);
+  })();
+
+  // Input submit
+  function submit() {
+    // Values from input
+    var blocksize = $("#input_blocksize").val();
+    var mmsize = $("#input_mmsize").val();
+    var cachesize = $("#input_cmsize").val();
+
+    // Hide input card
+    $(".input-card").hide();
+    $(".output-card").hide();
+    $(".simulation-card").show();
+    $(".retry-button").show();
+    $(".poutput-button").show();
+
+    // For clearing and appending div contents
+    $(".output-body").empty();
+    $(".output-button").empty();
+    $(".output-button").append('<div class="form-group text-center p-3"> <button type="button" class="btn btn-success" onclick="download()">SAVE AS .TXT FILE</button> </div>');
+  }
+
+  // Retry button
+  function retry() {
+    location.reload()
+  }
+
+  // Download text file
+  function download() {
+    var a = document.body.appendChild(
+      document.createElement("a")
+    );
+    var textToWrite = document.getElementById("output-body").innerText;
+    a.download = "cache-fa-lru.txt";
+    textToWrite = textToWrite.replace(/\n/g, "%0D%0A");
+    a.href = "data:text/plain," + textToWrite;
+    a.click();
+  }
+</script>
+
+</html>
