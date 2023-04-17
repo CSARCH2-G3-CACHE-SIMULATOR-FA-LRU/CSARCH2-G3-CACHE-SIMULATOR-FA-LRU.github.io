@@ -286,7 +286,7 @@ $(document).ready(function () {
     function printVals(lruMap) {
         snapshots = lruMap.cacheSnapshot
         cacheSize = snapshots[0].length
-
+        //output-card-text
         $("#output-body").append('<p class="output-card-text"><b>Number of Cache Hits:</b> ' + lruMap.cacheHit + '</p>')
         $("#output-body").append('<p class="output-card-text"><b>Number of Cache Miss:</b> ' + lruMap.cacheMiss + '</p>')
         $("#output-body").append('<p class="output-card-text"><b>Miss Penalty (nanoseconds):</b> ' + lruMap.missPenalty + '</p>')
