@@ -287,12 +287,12 @@ $(document).ready(function () {
         snapshots = lruMap.cacheSnapshot
         cacheSize = snapshots[0].length
 
-        $("#output-body").append('<p class="card-text"><b>Number of Cache Hits:</b> ' + lruMap.cacheHit + '</p>')
-        $("#output-body").append('<p class="card-text"><b>Number of Cache Miss:</b> ' + lruMap.cacheMiss + '</p>')
-        $("#output-body").append('<p class="card-text"><b>Miss Penalty (nanoseconds):</b> ' + lruMap.missPenalty + '</p>')
-        $("#output-body").append('<p class="card-text"><b>Average Memory Access Time (nanoseconds):</b> ' + lruMap.aveAccessTime + '</p>')
-        $("#output-body").append('<p class="card-text"><b>Total Memory Access Time (nanoseconds):</b> ' + lruMap.totalAccessTime + '</p>')
-        $("#output-body").append('<p class="card-text"><b>Final Snapshot of Cache Memory:</p>')
+        $("#output-body").append('<p class="output-card-text"><b>Number of Cache Hits:</b> ' + lruMap.cacheHit + '</p>')
+        $("#output-body").append('<p class="output-card-text"><b>Number of Cache Miss:</b> ' + lruMap.cacheMiss + '</p>')
+        $("#output-body").append('<p class="output-card-text"><b>Miss Penalty (nanoseconds):</b> ' + lruMap.missPenalty + '</p>')
+        $("#output-body").append('<p class="output-card-text"><b>Average Memory Access Time (nanoseconds):</b> ' + lruMap.aveAccessTime + '</p>')
+        $("#output-body").append('<p class="output-card-text"><b>Total Memory Access Time (nanoseconds):</b> ' + lruMap.totalAccessTime + '</p>')
+        $("#output-body").append('<p class="output-card-text"><b>Final Snapshot of Cache Memory:</p>')
         $("#output-body").append("<div class=\"row\"><div class=\"col\"><table class=\"table\" style='width: 40%'><thead class=\"thead-dark\"><tr><th scope=\"col\">Block Number</th><th scope=\"col\">Data</th></tr></thead><tbody id='snapshotTable'></tbody></table></div></div>")
         for (var x = 0; x < cacheSize; x++) {
             if (snapshots[memoryMap.length - 1][x] != null)
